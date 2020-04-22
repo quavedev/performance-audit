@@ -1,0 +1,20 @@
+{
+  "name": "performance-audit",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "performance",
+    "auditing"
+  ],
+  "author": "Quave",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/runtime": "^7.9.2",
+    "lodash.get": "^4.4.2",
+    "node-fetch": "^2.3.0"
+  }
+}
