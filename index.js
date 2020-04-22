@@ -2,17 +2,26 @@
 import get from "lodash.get";
 import fetch from "node-fetch";
 
-const getScores = (data) => {
+const TEST_TYPES = [
+  "pwa",
+  "bestPractices",
+  "accessibility",
+  "seo",
+  "performance",
+  "appJsTransferSize",
+  "appCssTransferSize",
+];
+
+const getScores = ({ data, jsIdentifier, cssIdentifier }) => {
   const networkRequestsItems =
     get(data, "lighthouseResult.audits.network-requests.details.items") || [];
   const appJs =
     networkRequestsItems.find(
-      (nri) => nri && nri.url && nri.url.includes(".js?meteor_js_resource=true")
+      (nri) => nri && nri.url && nri.url.includes(jsIdentifier)
     ) || {};
   const appCss =
     networkRequestsItems.find(
-      (nri) =>
-        nri && nri.url && nri.url.includes(".css?meteor_css_resource=true")
+      (nri) => nri && nri.url && nri.url.includes(cssIdentifier)
     ) || {};
 
   const assets = { appJs, appCss };
@@ -31,7 +40,24 @@ const getScores = (data) => {
   };
 };
 
-export const createTest = (tests) =>
+const validateTest = (test) => {
+  const {
+    appJsTransferSize,
+    appCssTransferSize,
+    jsIdentifier,
+    cssIdentifier,
+  } = test;
+  if (appJsTransferSize && !jsIdentifier) {
+    throw new Error("appJsTransferSize needs a jsIdentifier value");
+  }
+  if (appCssTransferSize && !cssIdentifier) {
+    throw new Error("appCssTransferSize needs a cssIdentifier value");
+  }
+
+  return test;
+};
+
+export const createTest = (tests, defaultTest = {}) =>
   describe("pagespeed", () => {
     beforeEach(() => {
       jest.setTimeout(3 * 60 * 1000);
@@ -39,26 +65,36 @@ export const createTest = (tests) =>
 
     tests
       .filter(({ skip }) => !skip)
-      .forEach(({ url, strategy, baseline, threshold }) =>
+      .map((test) => Object.assign({}, defaultTest, test))
+      .map(validateTest)
+      .forEach((performanceTest) => {
+        const {
+          url,
+          strategy,
+          threshold,
+          pwa,
+          bestPractices,
+          accessibility,
+          seo,
+          performance,
+          appJsTransferSize,
+          appCssTransferSize,
+          jsIdentifier,
+          cssIdentifier,
+        } = performanceTest;
         test(`${url}_${strategy}`, async () => {
-          expect.assertions(Object.keys(baseline).length);
+          const testCount = TEST_TYPES.filter((testType) =>
+            Object.keys(performanceTest).includes(testType)
+          ).length;
 
-          const {
-            pwa,
-            bestPractices,
-            accessibility,
-            seo,
-            performance,
-            appJsTransferSize,
-            appCssTransferSize,
-          } = baseline;
+          expect.assertions(testCount);
 
           const response = await fetch(
             `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${url}&category=pwa&category=performance&category=accessibility&category=best-practices&category=seo&strategy=${strategy}`
           );
           const data = await response.json();
 
-          const scores = getScores(data);
+          const scores = getScores({ data, jsIdentifier, cssIdentifier });
           // eslint-disable-next-line no-console
           console.log(`${url}_${strategy}`, scores);
           const thresholdForLess = 1 + (1 - threshold);
@@ -105,6 +141,6 @@ export const createTest = (tests) =>
               `performance score should be better than ${performance}`
             ).toBeGreaterThanOrEqual(performance * threshold);
           }
-        })
-      );
+        });
+      });
   });
