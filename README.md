@@ -8,7 +8,7 @@ Easily check the performance of a web address according to Google's PageSpeed an
 
 ## How to use
 
-Pass a array of tests to the `createTest` function.
+Pass a array of tests to the `checkPerformance` function.
 
 Test object structure:
 - `url`: The link to test
@@ -23,9 +23,9 @@ Additionally, you may pass a defaultTest as a second argument, to use values com
 #### Example
 ```js
 // Example file app.slow.test.js
-import { createTest } from "@quave/performance-audit";
+import { checkPerformance } from "@quave/performance-audit";
 
-createTest([
+checkPerformance([
   {
     url: "https://www.meteor.com",
     strategy: "desktop",

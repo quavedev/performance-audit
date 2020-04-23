@@ -57,13 +57,13 @@ const validateTest = (test) => {
   return test;
 };
 
-export const createTest = (tests, defaultTest = {}) =>
+export const checkPerformance = ({ tests: applications, defaultTest = {} }) =>
   describe("pagespeed", () => {
     beforeEach(() => {
       jest.setTimeout(3 * 60 * 1000);
     });
 
-    tests
+    applications
       .filter(({ skip }) => !skip)
       .map((test) => Object.assign({}, defaultTest, test))
       .map(validateTest)
@@ -83,8 +83,8 @@ export const createTest = (tests, defaultTest = {}) =>
           cssIdentifier,
         } = performanceTest;
         test(`${url}_${strategy}`, async () => {
-          const testCount = TEST_TYPES.filter((testType) =>
-            Object.keys(performanceTest).includes(testType)
+          const testCount = Object.keys(performanceTest).filter((test) =>
+            TEST_TYPES.includes(test)
           ).length;
 
           expect.assertions(testCount);
