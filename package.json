@@ -1,10 +1,10 @@
 {
   "name": "@quave/performance-audit",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Easily check the performance of a web address according to Google's Lighthouse and compare with an expected baseline.",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepublishOnly": "babel src --out-dir lib"
   },
   "keywords": [
     "performance",
@@ -17,11 +17,15 @@
     "url": "https://github.com/quavedev/performance-audit"
   },
   "dependencies": {
-    "@babel/runtime": "^7.9.2",
     "lodash.get": "^4.4.2",
     "node-fetch": "^2.3.0"
   },
   "peerDependencies": {
     "jest": "^23"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.5"
   }
 }
