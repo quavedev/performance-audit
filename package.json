@@ -1,6 +1,6 @@
 {
   "name": "@quave/performance-audit",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Easily check the performance of a web address according to Google's Lighthouse and compare with an expected baseline.",
   "main": "index.js",
   "scripts": {
