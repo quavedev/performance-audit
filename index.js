@@ -57,7 +57,7 @@ const validateTest = (test) => {
   return test;
 };
 
-export const checkPerformance = ({ tests: applications, defaultTest = {} }) =>
+export const checkPerformance = ({ applications, defaultTest = {} }) =>
   describe("pagespeed", () => {
     beforeEach(() => {
       jest.setTimeout(3 * 60 * 1000);
@@ -67,7 +67,7 @@ export const checkPerformance = ({ tests: applications, defaultTest = {} }) =>
       .filter(({ skip }) => !skip)
       .map((test) => Object.assign({}, defaultTest, test))
       .map(validateTest)
-      .forEach((performanceTest) => {
+      .forEach((application) => {
         const {
           url,
           strategy,
@@ -81,9 +81,9 @@ export const checkPerformance = ({ tests: applications, defaultTest = {} }) =>
           appCssTransferSize,
           jsIdentifier,
           cssIdentifier,
-        } = performanceTest;
+        } = application;
         test(`${url}_${strategy}`, async () => {
-          const testCount = Object.keys(performanceTest).filter((test) =>
+          const testCount = Object.keys(application).filter((test) =>
             TEST_TYPES.includes(test)
           ).length;
 
