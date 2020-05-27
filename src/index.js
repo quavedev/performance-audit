@@ -87,17 +87,28 @@ export const checkPerformance = ({ applications, options = {} }) =>
             TEST_TYPES.includes(test)
           ).length;
 
-          expect.assertions(testCount);
+          let retryCount = 3;
+          let data = {};
+          do {
+            const response = await fetch(
+              `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${url}&category=pwa&category=performance&category=accessibility&category=best-practices&category=seo&strategy=${strategy}`
+            );
+            data = await response.json();
+            retryCount--;
+          } while (data.error && retryCount > 0);
 
-          const response = await fetch(
-            `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${url}&category=pwa&category=performance&category=accessibility&category=best-practices&category=seo&strategy=${strategy}`
-          );
-          const data = await response.json();
+          if (data.error && retryCount === 0) {
+            console.log(data.error.message)
+            return;
+          }
 
           const scores = getScores({ data, jsIdentifier, cssIdentifier });
           // eslint-disable-next-line no-console
           console.log(`${url}_${strategy}`, scores);
           const thresholdForLess = 1 + (1 - threshold);
+
+          expect.assertions(testCount);
+
           if (appJsTransferSize) {
             expect(
               scores.appJs.transferSize,

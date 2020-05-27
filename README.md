@@ -15,9 +15,9 @@ Test object structure:
 - `url`: The link to test
 - `stategy`: Should be `desktop` or `mobile`
 - `threshold`: How much the results need to differ to trigger a fail 
-- `pwa`, `bestPractices`, `accessibility`, `seo`, `performance`: Scores baselines for the tests
-- `appJsTransferSize`, `appCssTransferSize`: Sizes baselines of the js and css bundles
-- `jsIdentifier`, `cssIdentifier`: String used to identify your app's bundle
+- `pwa`, `bestPractices`, `accessibility`, `seo`, `performance`: Scores baselines for the tests (optional)
+- `appJsTransferSize`, `appCssTransferSize`: Sizes baselines of the js and css bundles (optional)
+- `jsIdentifier`, `cssIdentifier`: String used to identify your app's bundle. (required if using `appJsTransferSize` or `appCssTrasnferSize`)
 
 Additionally, you may pass a `options` as a second argument, to use values commom for all tests.
 

@@ -1,6 +1,6 @@
 {
   "name": "@quave/performance-audit",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Easily check the performance of a web address according to Google's Lighthouse and compare with an expected baseline.",
   "main": "lib/index.js",
   "scripts": {
@@ -27,6 +27,7 @@
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.0",
-    "@babel/preset-env": "^7.9.5"
+    "@babel/preset-env": "^7.9.5",
+    "jest": "^26.0.1"
   }
 }
